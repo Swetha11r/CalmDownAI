@@ -8,6 +8,11 @@ const toggleCameraButton = document.getElementById("toggleCameraButton");
 const webcamVideo = document.getElementById("webcamVideo");
 const cameraStatus = document.getElementById("cameraStatus");
 const cameraMessage = document.getElementById("cameraMessage");
+const breathingExerciseButton = document.getElementById("breathingExerciseButton");
+const breathingPanel = document.getElementById("breathingPanel");
+const closeBreathingButton = document.getElementById("closeBreathingButton");
+const breathingText = document.getElementById("breathingText");
+
 
 const dominantEmotion = document.getElementById("dominantEmotion");
 const sentimentScore = document.getElementById("sentimentScore");
@@ -30,6 +35,7 @@ const chips = [...document.querySelectorAll(".chip")];
 let cameraStream = null;
 let faceApiReady = false;
 const historyStorageKey = "calmdown-ai-mood-history";
+
 
 const defaultMoodHistory = [
   { day: "Mon", value: 44 },
@@ -429,6 +435,8 @@ startCameraButton.addEventListener("click", startCamera);
 toggleCameraButton.addEventListener("click", startCamera);
 stopCameraButton.addEventListener("click", stopCamera);
 captureButton.addEventListener("click", detectExpression);
+breathingExerciseButton.addEventListener("click", startBreathingExercise);
+closeBreathingButton.addEventListener("click", closeBreathingExercise);
 
 chips.forEach((chip) => {
   chip.addEventListener("click", () => {
@@ -436,6 +444,23 @@ chips.forEach((chip) => {
     applyAnalysis(expressionOutput.textContent, true);
   });
 });
+let breathingInterval = null;
+
+function startBreathingExercise() {
+  breathingPanel.classList.remove("hidden");
+  let inhale = true;
+  breathingText.textContent = "Breathe In";
+
+  breathingInterval = setInterval(() => {
+    inhale = !inhale;
+    breathingText.textContent = inhale ? "Breathe In" : "Breathe Out";
+  }, 4000);
+}
+
+function closeBreathingExercise() {
+  breathingPanel.classList.add("hidden");
+  clearInterval(breathingInterval);
+}
 
 renderMoodHistory();
 renderRecommendations(recommendationLibrary.low);
